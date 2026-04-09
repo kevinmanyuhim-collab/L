@@ -1,0 +1,1903 @@
+-- ==========================================
+-- ========== 金鎖匙系統 (Key System) ==========
+-- ==========================================
+local KeyPassword = "uwu"
+local KeyLink = "https://link-hub.net/4336219/HBBEUMHjopUo"
+
+-- 確保 UI 建立在安全的地方 (支援各大執行器)
+local CoreGui = (gethui and gethui()) or game:GetService("CoreGui") or game:GetService("Players").LocalPlayer.PlayerGui
+
+local KeyUI = Instance.new("ScreenGui")
+KeyUI.Name = "KevinKeySystem"
+KeyUI.ResetOnSpawn = false
+KeyUI.Parent = CoreGui
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 350, 0, 200)
+MainFrame.Position = UDim2.new(0.5, -175, 0.5, -100)
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = KeyUI
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 8)
+UICorner.Parent = MainFrame
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.BackgroundTransparency = 1
+Title.Text = "kevin script Enhancements v3 - 密碼驗證"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 20
+Title.Font = Enum.Font.GothamBold
+Title.Parent = MainFrame
+
+local InputBox = Instance.new("TextBox")
+InputBox.Size = UDim2.new(0, 300, 0, 40)
+InputBox.Position = UDim2.new(0.5, -150, 0, 60)
+InputBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+InputBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+InputBox.PlaceholderText = "請輸入密碼..."
+InputBox.TextSize = 16
+InputBox.Font = Enum.Font.Gotham
+InputBox.Text = ""
+InputBox.Parent = MainFrame
+
+local InputCorner = Instance.new("UICorner")
+InputCorner.CornerRadius = UDim.new(0, 6)
+InputCorner.Parent = InputBox
+
+local VerifyBtn = Instance.new("TextButton")
+VerifyBtn.Size = UDim2.new(0, 140, 0, 40)
+VerifyBtn.Position = UDim2.new(0, 25, 0, 130)
+VerifyBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+VerifyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+VerifyBtn.Text = "驗證進入"
+VerifyBtn.TextSize = 16
+VerifyBtn.Font = Enum.Font.GothamBold
+VerifyBtn.Parent = MainFrame
+
+local VerifyCorner = Instance.new("UICorner")
+VerifyCorner.CornerRadius = UDim.new(0, 6)
+VerifyCorner.Parent = VerifyBtn
+
+local GetKeyBtn = Instance.new("TextButton")
+GetKeyBtn.Size = UDim2.new(0, 140, 0, 40)
+GetKeyBtn.Position = UDim2.new(1, -165, 0, 130)
+GetKeyBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+GetKeyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+GetKeyBtn.Text = "獲取密碼"
+GetKeyBtn.TextSize = 16
+GetKeyBtn.Font = Enum.Font.GothamBold
+GetKeyBtn.Parent = MainFrame
+
+local GetKeyCorner = Instance.new("UICorner")
+GetKeyCorner.CornerRadius = UDim.new(0, 6)
+GetKeyCorner.Parent = GetKeyBtn
+
+local isAuthenticated = false
+
+-- 驗證按鈕邏輯
+VerifyBtn.MouseButton1Click:Connect(function()
+	if InputBox.Text == KeyPassword then
+		isAuthenticated = true
+		KeyUI:Destroy()
+	else
+		InputBox.Text = ""
+		InputBox.PlaceholderText = "密碼錯誤！請重試"
+		task.wait(1.5)
+		InputBox.PlaceholderText = "請輸入密碼..."
+	end
+end)
+
+-- 獲取密碼按鈕邏輯
+GetKeyBtn.MouseButton1Click:Connect(function()
+	if setclipboard then
+		setclipboard(KeyLink)
+		Title.Text = "網址已複製到剪貼簿！"
+		Title.TextColor3 = Color3.fromRGB(0, 255, 100)
+		task.wait(2)
+		Title.Text = "kevin script Enhancements v3 - 密碼驗證"
+		Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	else
+		Title.Text = "你的執行器不支援複製功能"
+		Title.TextColor3 = Color3.fromRGB(255, 50, 50)
+		task.wait(2)
+		Title.Text = "kevin script Enhancements v3 - 密碼驗證"
+		Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	end
+end)
+
+-- 暫停腳本向下執行，直到密碼驗證成功
+repeat task.wait() until isAuthenticated
+
+-- ==========================================
+-- ========== 以下為你的主腳本內容 ==========
+-- ==========================================
+
+-- kevin v3 移植版 (LinoriaLib UI) - 終極合併版（所有函數完整）
+-- 包含：內建 Aimbot + 外部視覺輔助 + CSync Void (去同步防打) + Silent Aim + Tracers + OffScreen + Health ESP + World/FOV Mods
+
+local repo = "https://raw.githubusercontent.com/mstudio45/LinoriaLib/main/"
+local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
+local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
+local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
+
+-- 載入外部模組 (Chams 改用內建)
+local targethud = loadstring(game:HttpGet("https://raw.githubusercontent.com/Stratxgy/Lua-TargetHud/refs/heads/main/targethud.lua"))()
+local speed = loadstring(game:HttpGet("https://raw.githubusercontent.com/Stratxgy/Lua-Speed/refs/heads/main/speed.lua"))()
+
+local Options = Library.Options
+local Toggles = Library.Toggles
+
+Library.ForceCheckbox = false
+Library.ShowToggleFrameInKeybinds = true
+
+local Window = Library:CreateWindow({
+	Title = "kevin script Enhancements v3",
+	Footer = "by kevin | 包含 CSync Void & Silent Aim",
+	Icon = 95816097006870,
+	NotifySide = "Right",
+	ShowCustomCursor = true,
+})
+
+-- ========== 服務與全局變數 ==========
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Camera = workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+local Lighting = game:GetService("Lighting")
+local Workspace = game:GetService("Workspace")
+local TeleportService = game:GetService("TeleportService")
+local VirtualUser = game:GetService("VirtualUser")
+local TweenService = game:GetService("TweenService")
+local Debris = game:GetService("Debris")
+
+-- 功能開關總表
+local ExtraToggles = {
+	Fly = false, FlySpeed = 50, InfiniteJump = false, Noclip = false,
+	BHop = false, SpiderClimb = false, Jetpack = false,
+	AutoRespawn = false, GodMode = false, NoFallDamage = false,
+	JumpPower = false, JumpPowerValue = 50,
+	TeleportAboveEnemy = false, TeleportAboveHeight = 12,
+	NoRecoil = false, RapidFire = false, InfiniteAmmo = false, AutoShoot = false, Wallbang = false,
+	AimbotEnabled = false, WallCheck = false, AimbotSmoothness = false, AimbotPart = false, AimbotHoldMode = false,
+	AimbotSmoothnessValue = 0.5, AimbotFOV = 50, AimbotKey = "MB2", ShowTargetMarker = false,
+	AimbotHitChance = 100, AimbotPrediction = false, AimbotPredictionStrength = 0.5,
+	AimbotSwitchDelay = 0, AimbotDynamicFOV = false, AimbotTeamCheck = false,
+	
+	-- Silent Aim 與其 FOV 變數
+	SilentAim = false, SilentAimFOV = 50, SilentAimPart = false, SilentAimHitChance = 100, ShowSilentAimFOV = false,
+	SilentAimFOVColor = Color3.fromRGB(255, 85, 85),
+	SilentAimFOVFilled = false,
+	SilentAimFOVTransparency = 1,
+	
+	ESP = false, SkeletonESP = false, Box2D = false, Box3D = false, ShowName = false, ShowDistance = false, ShowHealthBar = false, Radar = false,
+	Fullbright = false, NoFog = false, ThirdPerson = false, FOVChanger = false, CustomCrosshair = false,
+	BulletTracers = false, OffScreenIndicators = false, IndicatorSize = 20, IndicatorRadius = 150,
+	TimeChanger = false, GravityChanger = false, RemoveClouds = false, NoPlants = false,
+	TimeValue = 12, GravityValue = 196.2,
+	AutoReconnect = false, AntiAFK = false, QuickRespawn = false, InfiniteTools = false,
+	ServerHop = false, ChatSpam = false, SpamMessage = "KEVIN SCRIPT RULES!",
+	Enabled = false, OrbitDistance = 10, OrbitSpeed = 5,
+	OrbitHeightMode = false, OrbitHeightAmplitude = 2, OrbitHeightFrequency = 1,
+	OrbitEllipse = false, OrbitEllipseXRatio = 1, OrbitEllipseZRatio = 1,
+	OrbitDynamicRadius = false, OrbitRadiusAmplitude = 2, OrbitRadiusFrequency = 0.5,
+	OrbitDynamicSpeed = false, OrbitSpeedAmplitude = 2, OrbitSpeedFrequency = 0.3,
+	AntiAim = false, AntiAimMode = "FullBody", AntiAimSpeed = 180, AntiAimRadius = 1.5,
+	AntiAimFrequency = 10, AntiAimMultiAxis = false,
+	SpeedEnabled = false, SpeedAmount = 16, SpeedKey = "Divide",
+	ChamsEnabled = false, ChamsFillTransparency = 0, TargetHudEnabled = false,
+	
+	-- FOV 與 世界顏色新增變數
+	FOVColor = Color3.fromRGB(255, 255, 255),
+	FOVFilled = false,
+	FOVTransparency = 1,
+	WorldColorEnabled = false,
+	WorldColor = Color3.fromRGB(255, 255, 255),
+	CustomSkyEnabled = false,
+	CustomSkyID = "1417494402"
+}
+local ExtraConnections = {}
+local ESPObjects = {}
+local OffScreenObjects = {}
+local FOVValue = 70
+local Crosshair = nil
+local LastAntiAimTime = 0
+local LastTeleportTime = 0
+local OrbitAngle = 0
+local OrbitRadiusTime = 0
+local OrbitSpeedTime = 0
+
+-- Jetpack 全局變數
+local holdingJetpack = false
+local JetpackMobileBtn = nil
+
+-- 繪製對象
+local Drawings = {}
+local RadarGui = nil
+local MarkerGui = nil
+
+-- ========== CSYNC VOID (Desync) 框架 ==========
+local VoidFramework = {
+    voidActive = false,
+    lastSwitch = 0,
+    currentVoidIndex = 1,
+    originalCFrame = nil,
+    csyncConnection = nil,
+    desyncEnabled = false,
+    simPosition = Vector3.new(0,0,0),
+    simVelocity = Vector3.new(0,0,0),
+    jerkTimer = 0,
+    settings = {
+        enable_void = false,
+        switchSpeed = 0.05,
+        depthMultiplier = 1,
+        rand_vel_x = 0,
+        rand_vel_y = 0,
+        rand_vel_z = 0,
+        jerk_intensity = 20,
+        random_vel_intensity = 15,
+    }
+}
+
+local function cframeInvalid(cf)
+    if not cf then return true end
+    local p = cf.Position
+    if not p then return true end
+    return p.Y < -10000 or math.abs(p.X) > 500000 or math.abs(p.Z) > 500000
+end
+
+local function generateDeepVoid()
+    local positions = {}
+    local depths = {-1e6, -2e6, -5e6, -1e7, -2e7}
+    local far = {-1e6, -5e5, -2e5, -1e5, 1e5, 2e5, 5e5, 1e6}
+    for i = 1, 20 do
+        local x = far[math.random(1,#far)] + math.random(-5000,5000)
+        local y = depths[math.random(1,#depths)] + math.random(-5000,5000)
+        local z = far[math.random(1,#far)] + math.random(-5000,5000)
+        positions[i] = CFrame.new(x,y,z)
+    end
+    return positions
+end
+local deepVoidPositions = generateDeepVoid()
+
+local function updateSimulation(dt)
+    if not VoidFramework.desyncEnabled then return end
+    local S = VoidFramework.settings
+    local baseVel = Vector3.new(
+        math.random(-S.rand_vel_x, S.rand_vel_x),
+        math.random(-S.rand_vel_y, S.rand_vel_y),
+        math.random(-S.rand_vel_z, S.rand_vel_z)
+    )
+    local jerkIntensity = S.jerk_intensity / 100
+    local randIntensity = S.random_vel_intensity / 100
+    VoidFramework.jerkTimer -= dt
+    if VoidFramework.jerkTimer <= 0 then
+        VoidFramework.jerkTimer = math.random(3,10)/10
+        local jerk = Vector3.new(
+            math.random(-40,40) * jerkIntensity,
+            math.random(-40,40) * jerkIntensity,
+            math.random(-40,40) * jerkIntensity
+        )
+        VoidFramework.simVelocity = VoidFramework.simVelocity + jerk
+    end
+    local chaos = Vector3.new(
+        math.random(-60,60) * randIntensity,
+        math.random(-60,60) * randIntensity,
+        math.random(-60,60) * randIntensity
+    )
+    VoidFramework.simVelocity = (VoidFramework.simVelocity * 0.9) + baseVel + chaos
+    VoidFramework.simPosition = VoidFramework.simPosition + VoidFramework.simVelocity * dt
+end
+
+local function getDesyncOffset()
+    local S = VoidFramework.settings
+    local anchor = Vector3.new(0,0,0)
+    if VoidFramework.voidActive and deepVoidPositions[VoidFramework.currentVoidIndex] then
+        local baseCF = deepVoidPositions[VoidFramework.currentVoidIndex]
+        local depth = S.depthMultiplier or 1
+        local bp = baseCF.Position
+        anchor = Vector3.new(bp.X * depth, bp.Y * depth, bp.Z * depth)
+    end
+    return anchor + VoidFramework.simPosition
+end
+
+local function getHRP(p) return p and p.Character and p.Character:FindFirstChild("HumanoidRootPart") end
+local function getHumanoid(p) return p and p.Character and p.Character:FindFirstChildOfClass("Humanoid") end
+
+local function startCSync()
+    local hrp = getHRP(LocalPlayer)
+    if not hrp then return end
+    if VoidFramework.csyncConnection then return end
+    VoidFramework.csyncConnection = RunService.Heartbeat:Connect(function()
+        local hrp = getHRP(LocalPlayer)
+        if not hrp then return end
+        local realCF = hrp.CFrame
+        local offset = getDesyncOffset()
+        hrp.CFrame = CFrame.new(offset)
+        RunService.RenderStepped:Wait()
+        hrp.CFrame = realCF
+    end)
+end
+
+local function stopCSync()
+    if VoidFramework.csyncConnection then
+        VoidFramework.csyncConnection:Disconnect()
+        VoidFramework.csyncConnection = nil
+    end
+end
+
+local function updateVoid(dt)
+    if not VoidFramework.voidActive then return end
+    local S = VoidFramework.settings
+    if tick() - VoidFramework.lastSwitch < S.switchSpeed then return end
+    VoidFramework.lastSwitch = tick()
+    VoidFramework.currentVoidIndex = (VoidFramework.currentVoidIndex % #deepVoidPositions) + 1
+end
+
+local function startVoid()
+    local hrp = getHRP(LocalPlayer)
+    if not hrp then return end
+    VoidFramework.originalCFrame = hrp.CFrame
+    VoidFramework.voidActive = true
+    VoidFramework.desyncEnabled = true
+    startCSync()
+end
+
+local function stopVoid()
+    VoidFramework.voidActive = false
+    VoidFramework.desyncEnabled = false
+    stopCSync()
+end
+
+local function safeReturn()
+    stopCSync()
+    task.wait(0.1)
+    local hrp = getHRP(LocalPlayer)
+    if not hrp then return end
+    local returnCF = VoidFramework.originalCFrame or CFrame.new(0,20,0)
+    if cframeInvalid(returnCF) then
+        returnCF = CFrame.new(0,20,0)
+    end
+    hrp.CFrame = returnCF
+end
+-- ========== CSYNC VOID 框架結束 ==========
+
+-- ========== 工具函數 ==========
+local function keyToEnum(k)
+	local m = {MB1=Enum.UserInputType.MouseButton1, MB2=Enum.UserInputType.MouseButton2, MB3=Enum.UserInputType.MouseButton3}
+	if m[k] then return m[k] end
+	local s = {Divide=Enum.KeyCode.KeypadDivide, Multiply=Enum.KeyCode.KeypadMultiply, Subtract=Enum.KeyCode.KeypadMinus,
+		Add=Enum.KeyCode.KeypadPlus, Decimal=Enum.KeyCode.KeypadPeriod, Enter=Enum.KeyCode.KeypadEnter,
+		Space=Enum.KeyCode.Space, LeftShift=Enum.KeyCode.LeftShift, RightShift=Enum.KeyCode.RightShift,
+		LeftControl=Enum.KeyCode.LeftControl, RightControl=Enum.KeyCode.RightControl, LeftAlt=Enum.KeyCode.LeftAlt, RightAlt=Enum.KeyCode.RightAlt,
+		Tab=Enum.KeyCode.Tab, CapsLock=Enum.KeyCode.CapsLock, Backspace=Enum.KeyCode.Backspace, Delete=Enum.KeyCode.Delete,
+		Insert=Enum.KeyCode.Insert, Home=Enum.KeyCode.Home, End=Enum.KeyCode.End, PageUp=Enum.KeyCode.PageUp, PageDown=Enum.KeyCode.PageDown,
+		Up=Enum.KeyCode.Up, Down=Enum.KeyCode.Down, Left=Enum.KeyCode.Left, Right=Enum.KeyCode.Right}
+	if s[k] then return s[k] end
+	local c = Enum.KeyCode[k]; if c then return c end
+	return Enum.UserInputType.MouseButton2
+end
+
+local function getClosestPlayer(d, maxDist)
+	local cd = d or math.huge; local cp = nil
+	local mp = getHRP(LocalPlayer) and getHRP(LocalPlayer).Position
+	if not mp then return nil end
+	for _,p in ipairs(Players:GetPlayers()) do 
+		if p~=LocalPlayer then
+			if ExtraToggles.AimbotTeamCheck and p.Team == LocalPlayer.Team then continue end
+			local h = getHRP(p); if h then
+				local dist = (h.Position - mp).Magnitude
+				if maxDist and dist > maxDist then continue end
+				if dist < cd then cd, cp = dist, p end
+			end
+		end 
+	end
+	return cp
+end
+
+-- ========== 外部模組初始化 ==========
+pcall(function()
+	getgenv().speed = { enabled = false, speed = 16, control = false, friction = 2.0, keybind = Enum.KeyCode.KeypadDivide }
+	getgenv().targethud = { enabled = false }
+end)
+
+-- ========== Bullet Tracers ==========
+local function createTracer(startPos, endPos)
+	local distance = (startPos - endPos).Magnitude
+	local tracer = Instance.new("Part")
+	tracer.Name = "BulletTracer"
+	tracer.Anchored = true
+	tracer.CanCollide = false
+	tracer.Material = Enum.Material.Neon
+	tracer.Color = Color3.fromRGB(255, 50, 50)
+	tracer.Size = Vector3.new(0.05, 0.05, distance)
+	tracer.CFrame = CFrame.lookAt(startPos, endPos) * CFrame.new(0, 0, -distance / 2)
+	tracer.Parent = workspace
+
+	Debris:AddItem(tracer, 1)
+	local tween = TweenService:Create(tracer, TweenInfo.new(1), {Transparency = 1})
+	tween:Play()
+end
+
+UserInputService.InputBegan:Connect(function(input, gpe)
+	if gpe then return end
+	if input.UserInputType == Enum.UserInputType.MouseButton1 and ExtraToggles.BulletTracers then
+		local char = LocalPlayer.Character
+		if char then
+			local startPos
+			local tool = char:FindFirstChildOfClass("Tool")
+			if tool and tool:FindFirstChild("Handle") then
+				startPos = tool.Handle.Position
+			else
+				startPos = char:FindFirstChild("Head") and char.Head.Position or nil
+			end
+			if startPos then
+				createTracer(startPos, LocalPlayer:GetMouse().Hit.Position)
+			end
+		end
+	end
+end)
+
+-- ========== 基礎功能實現 ==========
+local FlyBodyVelocity = nil
+local FlyBodyGyro = nil
+
+local function updateFly()
+	if not ExtraToggles.Fly then
+		if ExtraConnections.Fly then 
+			ExtraConnections.Fly:Disconnect()
+			ExtraConnections.Fly = nil 
+		end
+		if FlyBodyVelocity then FlyBodyVelocity:Destroy(); FlyBodyVelocity = nil end
+		if FlyBodyGyro then FlyBodyGyro:Destroy(); FlyBodyGyro = nil end
+		local hum = getHumanoid(LocalPlayer)
+		if hum then hum.PlatformStand = false end
+		return
+	end
+
+	if ExtraConnections.Fly then return end
+	local root = getHRP(LocalPlayer)
+	local hum = getHumanoid(LocalPlayer)
+	if not root or not hum then return end
+
+	FlyBodyVelocity = Instance.new("BodyVelocity")
+	FlyBodyVelocity.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+	FlyBodyVelocity.Parent = root
+
+	FlyBodyGyro = Instance.new("BodyGyro")
+	FlyBodyGyro.MaxTorque = Vector3.new(1e9, 1e9, 1e9)
+	FlyBodyGyro.P = 10000
+	FlyBodyGyro.D = 1000
+	FlyBodyGyro.Parent = root
+
+	hum.PlatformStand = true
+	local PlayerModule = require(LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"))
+
+	ExtraConnections.Fly = RunService.RenderStepped:Connect(function()
+		local currentRoot = getHRP(LocalPlayer)
+		local currentHum = getHumanoid(LocalPlayer)
+		if not currentRoot or not currentHum then return end
+		if FlyBodyVelocity.Parent ~= currentRoot then FlyBodyVelocity.Parent = currentRoot end
+		if FlyBodyGyro.Parent ~= currentRoot then FlyBodyGyro.Parent = currentRoot end
+		currentHum.PlatformStand = true
+
+		local controls = PlayerModule:GetControls()
+		local moveVector = controls:GetMoveVector()
+		local cam = workspace.CurrentCamera
+		local forward = cam.CFrame.LookVector
+		local right = cam.CFrame.RightVector
+		local upDown = 0
+		if UserInputService:IsKeyDown(Enum.KeyCode.Space) then upDown = 1 end
+		if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then upDown = -1 end
+
+		local velocity = (forward * -moveVector.Z + right * moveVector.X)
+		if velocity.Magnitude > 0 or upDown ~= 0 then
+			FlyBodyVelocity.Velocity = (velocity * ExtraToggles.FlySpeed) + Vector3.new(0, upDown * ExtraToggles.FlySpeed, 0)
+		else
+			FlyBodyVelocity.Velocity = Vector3.new(0, 0, 0)
+		end
+		FlyBodyGyro.CFrame = cam.CFrame
+	end)
+end
+
+local function updateInfiniteJump()
+	if ExtraToggles.InfiniteJump then
+		if ExtraConnections.InfiniteJump then return end
+		ExtraConnections.InfiniteJump = UserInputService.JumpRequest:Connect(function()
+			local hum = getHumanoid(LocalPlayer)
+			if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+		end)
+	else
+		if ExtraConnections.InfiniteJump then ExtraConnections.InfiniteJump:Disconnect(); ExtraConnections.InfiniteJump = nil end
+	end
+end
+
+local function updateNoclip()
+	if ExtraToggles.Noclip then
+		if ExtraConnections.Noclip then return end
+		ExtraConnections.Noclip = RunService.Stepped:Connect(function()
+			local char = LocalPlayer.Character
+			if char then
+				for _, v in ipairs(char:GetDescendants()) do
+					if v:IsA("BasePart") and v.CanCollide then v.CanCollide = false end
+				end
+			end
+		end)
+	else
+		if ExtraConnections.Noclip then ExtraConnections.Noclip:Disconnect(); ExtraConnections.Noclip = nil end
+		local char = LocalPlayer.Character
+		if char then
+			for _, v in ipairs(char:GetDescendants()) do
+				if v:IsA("BasePart") then v.CanCollide = true end
+			end
+		end
+	end
+end
+
+local function updateBHop()
+	if ExtraToggles.BHop then
+		if ExtraConnections.BHop then return end
+		ExtraConnections.BHop = RunService.RenderStepped:Connect(function()
+			local hum = getHumanoid(LocalPlayer)
+			if hum and hum.MoveDirection.Magnitude > 0 then
+				local state = hum:GetState()
+				if state == Enum.HumanoidStateType.Landed or state == Enum.HumanoidStateType.Running then
+					hum.Jump = true
+				end
+			end
+		end)
+	else
+		if ExtraConnections.BHop then ExtraConnections.BHop:Disconnect(); ExtraConnections.BHop = nil end
+	end
+end
+
+local function updateSpiderClimb()
+	if ExtraToggles.SpiderClimb then
+		if ExtraConnections.SpiderClimb then return end
+		ExtraConnections.SpiderClimb = RunService.RenderStepped:Connect(function()
+			local char = LocalPlayer.Character
+			if not char then return end
+			local root = char:FindFirstChild("HumanoidRootPart")
+			local hum = char:FindFirstChildOfClass("Humanoid")
+			if not root or not hum then return end
+			if hum.MoveDirection.Magnitude > 0 then
+				local raycastParams = RaycastParams.new()
+				raycastParams.FilterDescendantsInstances = {char}
+				raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+				local result = workspace:Raycast(root.Position, root.CFrame.LookVector * 2.5, raycastParams)
+				if result then root.Velocity = Vector3.new(root.Velocity.X, 40, root.Velocity.Z) end
+			end
+		end)
+	else
+		if ExtraConnections.SpiderClimb then ExtraConnections.SpiderClimb:Disconnect(); ExtraConnections.SpiderClimb = nil end
+	end
+end
+
+local function updateJetpack()
+	if ExtraToggles.Jetpack then
+		if ExtraConnections.Jetpack then return end
+		if UserInputService.TouchEnabled and not JetpackMobileBtn then
+			local uiParent = (gethui and gethui()) or CoreGui or LocalPlayer.PlayerGui
+			JetpackMobileBtn = Instance.new("ScreenGui", uiParent)
+			JetpackMobileBtn.Name = "JetpackMobileBtn"
+			local btn = Instance.new("TextButton", JetpackMobileBtn)
+			btn.Size = UDim2.new(0, 70, 0, 70)
+			btn.Position = UDim2.new(1, -120, 0.5, 0)
+			btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+			btn.BackgroundTransparency = 0.5
+			btn.Text = "Jetpack\n(按住)"
+			btn.TextColor3 = Color3.new(1,1,1)
+			btn.Font = Enum.Font.GothamBold
+			btn.TextSize = 13
+			local corner = Instance.new("UICorner", btn)
+			corner.CornerRadius = UDim.new(1, 0)
+			btn.MouseButton1Down:Connect(function() holdingJetpack = true end)
+			btn.MouseButton1Up:Connect(function() holdingJetpack = false end)
+			btn.MouseLeave:Connect(function() holdingJetpack = false end)
+		end
+
+		ExtraConnections.JetpackKeyBegan = UserInputService.InputBegan:Connect(function(input, gpe)
+			if gpe then return end
+			if input.KeyCode == Enum.KeyCode.Space then holdingJetpack = true end
+		end)
+		ExtraConnections.JetpackKeyEnded = UserInputService.InputEnded:Connect(function(input, gpe)
+			if input.KeyCode == Enum.KeyCode.Space then holdingJetpack = false end
+		end)
+
+		ExtraConnections.Jetpack = RunService.RenderStepped:Connect(function()
+			if holdingJetpack then
+				local char = LocalPlayer.Character
+				if not char then return end
+				local root = char:FindFirstChild("HumanoidRootPart")
+				if not root then return end
+				root.Velocity = Vector3.new(root.Velocity.X, 50, root.Velocity.Z)
+			end
+		end)
+	else
+		holdingJetpack = false
+		if ExtraConnections.Jetpack then ExtraConnections.Jetpack:Disconnect(); ExtraConnections.Jetpack = nil end
+		if ExtraConnections.JetpackKeyBegan then ExtraConnections.JetpackKeyBegan:Disconnect(); ExtraConnections.JetpackKeyBegan = nil end
+		if ExtraConnections.JetpackKeyEnded then ExtraConnections.JetpackKeyEnded:Disconnect(); ExtraConnections.JetpackKeyEnded = nil end
+		if JetpackMobileBtn then JetpackMobileBtn:Destroy(); JetpackMobileBtn = nil end
+	end
+end
+
+-- ========== 內建 Universal Aimbot ==========
+getgenv().ShowFOVCircle = false
+local FOVCircle = nil
+local SilentAimFOVCircle = nil
+pcall(function()
+	if Drawing then
+		FOVCircle = Drawing.new("Circle")
+		FOVCircle.Color = Color3.fromRGB(255, 255, 255)
+		FOVCircle.Thickness = 1
+		FOVCircle.Filled = false
+		FOVCircle.Transparency = 1
+		
+		SilentAimFOVCircle = Drawing.new("Circle")
+		SilentAimFOVCircle.Color = Color3.fromRGB(255, 85, 85)
+		SilentAimFOVCircle.Thickness = 1
+		SilentAimFOVCircle.Filled = false
+		SilentAimFOVCircle.Transparency = 1
+		SilentAimFOVCircle.Visible = false
+	end
+end)
+
+local MobileAimBtnUI = nil
+local MobileAiming = false
+local IsAimKeyDown = false
+local AimbotToggled = false
+
+local function setupMobileAimbotUI()
+	if UserInputService.TouchEnabled and not MobileAimBtnUI then
+		local uiParent = (gethui and gethui()) or CoreGui or LocalPlayer.PlayerGui
+		MobileAimBtnUI = Instance.new("ScreenGui", uiParent)
+		MobileAimBtnUI.Name = "MobileAimBtnUI"
+		local btn = Instance.new("TextButton", MobileAimBtnUI)
+		btn.Size = UDim2.new(0, 70, 0, 70)
+		btn.Position = UDim2.new(1, -120, 0.5, 80)
+		btn.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
+		btn.BackgroundTransparency = 0.5
+		btn.Text = "Aimbot\n[OFF]"
+		btn.TextColor3 = Color3.new(1,1,1)
+		btn.Font = Enum.Font.GothamBold
+		btn.TextSize = 13
+		local corner = Instance.new("UICorner", btn)
+		corner.CornerRadius = UDim.new(1, 0)
+		
+		local dragging, dragStart, startPos
+		btn.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+				dragging = true; dragStart = input.Position; startPos = btn.Position
+			end
+		end)
+		btn.InputEnded:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
+		end)
+		UserInputService.InputChanged:Connect(function(input)
+			if dragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
+				local delta = input.Position - dragStart
+				btn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+			end
+		end)
+		
+		btn.MouseButton1Click:Connect(function()
+			MobileAiming = not MobileAiming
+			if MobileAiming then
+				btn.BackgroundColor3 = Color3.fromRGB(30, 200, 30)
+				btn.Text = "Aimbot\n[ON]"
+			else
+				btn.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
+				btn.Text = "Aimbot\n[OFF]"
+			end
+		end)
+	end
+end
+
+UserInputService.InputBegan:Connect(function(input, gpe)
+	if gpe then return end
+	local keyEnum = keyToEnum(ExtraToggles.AimbotKey)
+	if input.UserInputType == keyEnum or input.KeyCode == keyEnum then
+		IsAimKeyDown = true
+		AimbotToggled = not AimbotToggled
+	end
+end)
+UserInputService.InputEnded:Connect(function(input, gpe)
+	local keyEnum = keyToEnum(ExtraToggles.AimbotKey)
+	if input.UserInputType == keyEnum or input.KeyCode == keyEnum then IsAimKeyDown = false end
+end)
+
+local function isVisible(targetPart)
+	if not targetPart then return false end
+	local origin = Camera.CFrame.Position
+	local direction = (targetPart.Position - origin)
+	local raycastParams = RaycastParams.new()
+	raycastParams.FilterDescendantsInstances = {LocalPlayer.Character, targetPart.Parent}
+	raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+	raycastParams.IgnoreWater = true
+	local result = workspace:Raycast(origin, direction, raycastParams)
+	return result == nil
+end
+
+local function getAimbotTarget()
+	local target = nil
+	local minAngle = ExtraToggles.AimbotFOV
+	if ExtraToggles.AimbotDynamicFOV then
+		local fovScale = 70 / Camera.FieldOfView
+		minAngle = ExtraToggles.AimbotFOV * fovScale
+	end
+	
+	local center
+	if UserInputService.TouchEnabled then
+		center = Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)
+	else
+		center = UserInputService:GetMouseLocation()
+	end
+	
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= LocalPlayer and player.Character then
+			if ExtraToggles.AimbotTeamCheck and player.Team == LocalPlayer.Team then continue end
+			local partName = ExtraToggles.AimbotPart and "Head" or "HumanoidRootPart"
+			local part = player.Character:FindFirstChild(partName)
+			local hum = player.Character:FindFirstChildOfClass("Humanoid")
+			if part and hum and hum.Health > 0 then
+				local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
+				if onScreen then
+					if ExtraToggles.WallCheck and not isVisible(part) then continue end
+					local dist = (Vector2.new(screenPos.X, screenPos.Y) - center).Magnitude
+					if dist < minAngle then
+						minAngle = dist
+						target = player
+					end
+				end
+			end
+		end
+	end
+	return target
+end
+
+local function updateAimbot()
+	if UserInputService.TouchEnabled then
+		if ExtraToggles.AimbotEnabled then
+			setupMobileAimbotUI()
+			if MobileAimBtnUI then MobileAimBtnUI.Enabled = true end
+		else
+			if MobileAimBtnUI then MobileAimBtnUI.Enabled = false end
+			MobileAiming = false
+		end
+	end
+end
+
+-- ========== Universal Silent Aim (Hook) ==========
+local mt = getrawmetatable(game)
+if mt then
+	local oldIndex = mt.__index
+	setreadonly(mt, false)
+	mt.__index = newcclosure(function(t, k)
+		if ExtraToggles.SilentAim and not checkcaller() and typeof(t) == "Instance" and t:IsA("Mouse") then
+			if k == "Hit" or k == "Target" then
+				local target = nil
+				local center
+				if UserInputService.TouchEnabled then
+					center = Vector2.new(workspace.CurrentCamera.ViewportSize.X/2, workspace.CurrentCamera.ViewportSize.Y/2)
+				else
+					center = UserInputService:GetMouseLocation()
+				end
+				local minAngle = ExtraToggles.SilentAimFOV
+				for _, player in ipairs(Players:GetPlayers()) do
+					if player ~= LocalPlayer and player.Character then
+						if ExtraToggles.AimbotTeamCheck and player.Team == LocalPlayer.Team then continue end
+						local partName = ExtraToggles.SilentAimPart and "Head" or "HumanoidRootPart"
+						local part = player.Character:FindFirstChild(partName)
+						local hum = player.Character:FindFirstChildOfClass("Humanoid")
+						if part and hum and hum.Health > 0 then
+							local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
+							if onScreen then
+								if ExtraToggles.WallCheck and not isVisible(part) then continue end
+								local dist = (Vector2.new(screenPos.X, screenPos.Y) - center).Magnitude
+								if dist < minAngle then minAngle = dist; target = player end
+							end
+						end
+					end
+				end
+				if target and target.Character then
+					local hitChanceValid = true
+					if ExtraToggles.SilentAimHitChance < 100 then
+						hitChanceValid = math.random(1, 100) <= ExtraToggles.SilentAimHitChance
+					end
+					if hitChanceValid then
+						local partName = ExtraToggles.SilentAimPart and "Head" or "HumanoidRootPart"
+						local targetPart = target.Character:FindFirstChild(partName)
+						if targetPart then
+							if k == "Hit" then return targetPart.CFrame
+							elseif k == "Target" then return targetPart end
+						end
+					end
+				end
+			end
+		end
+		return oldIndex(t, k)
+	end)
+	setreadonly(mt, true)
+end
+
+-- ========== 戰鬥、視覺與世界功能 ==========
+local function updateWorldColor()
+	local cc = Lighting:FindFirstChild("KevinWorldColor")
+	if ExtraToggles.WorldColorEnabled then
+		if not cc then
+			cc = Instance.new("ColorCorrectionEffect")
+			cc.Name = "KevinWorldColor"
+			cc.Parent = Lighting
+		end
+		cc.TintColor = ExtraToggles.WorldColor
+	else
+		if cc then cc:Destroy() end
+	end
+end
+
+local function updateSky()
+	local customSky = Lighting:FindFirstChild("KevinCustomSky")
+	if ExtraToggles.CustomSkyEnabled and ExtraToggles.CustomSkyID ~= "" then
+		if not customSky then
+			customSky = Instance.new("Sky")
+			customSky.Name = "KevinCustomSky"
+			customSky.Parent = Lighting
+		end
+		local id = ExtraToggles.CustomSkyID
+		if not id:match("^rbxassetid://") then
+			id = "rbxassetid://" .. (id:match("%d+") or "")
+		end
+		if id == "rbxassetid://" then return end
+		customSky.SkyboxBk = id
+		customSky.SkyboxDn = id
+		customSky.SkyboxFt = id
+		customSky.SkyboxLf = id
+		customSky.SkyboxRt = id
+		customSky.SkyboxUp = id
+	else
+		if customSky then customSky:Destroy() end
+	end
+end
+
+local function updateNoRecoil()
+	if ExtraToggles.NoRecoil then
+		if ExtraConnections.NoRecoil then return end
+		ExtraConnections.NoRecoil = RunService.RenderStepped:Connect(function()
+			local char = LocalPlayer.Character
+			if char then
+				for _, tool in ipairs(char:GetChildren()) do
+					if tool:IsA("Tool") then
+						local anim = tool:FindFirstChild("Animations")
+						if anim then
+							for _, track in ipairs(anim:GetChildren()) do
+								if track:IsA("AnimationTrack") and track.IsPlaying then track:Stop() end
+							end
+						end
+					end
+				end
+			end
+		end)
+	else
+		if ExtraConnections.NoRecoil then ExtraConnections.NoRecoil:Disconnect(); ExtraConnections.NoRecoil = nil end
+	end
+end
+
+local function updateRapidFire()
+	if ExtraToggles.RapidFire then
+		if ExtraConnections.RapidFire then return end
+		ExtraConnections.RapidFire = RunService.RenderStepped:Connect(function()
+			local char = LocalPlayer.Character
+			if char then
+				for _, tool in ipairs(char:GetChildren()) do
+					if tool:IsA("Tool") and tool:FindFirstChild("Handle") then
+						local anim = tool:FindFirstChild("Animations")
+						if anim then
+							for _, track in ipairs(anim:GetChildren()) do
+								if track:IsA("AnimationTrack") then track:AdjustSpeed(10) end
+							end
+						end
+					end
+				end
+			end
+		end)
+	else
+		if ExtraConnections.RapidFire then ExtraConnections.RapidFire:Disconnect(); ExtraConnections.RapidFire = nil end
+	end
+end
+
+local function updateInfiniteAmmo()
+	if ExtraToggles.InfiniteAmmo then
+		if ExtraConnections.InfiniteAmmo then return end
+		ExtraConnections.InfiniteAmmo = RunService.RenderStepped:Connect(function()
+			local char = LocalPlayer.Character
+			if char then
+				for _, tool in ipairs(char:GetChildren()) do
+					if tool:IsA("Tool") and tool:FindFirstChild("Ammo") then tool.Ammo.Value = tool.Ammo.MaxAmmo end
+				end
+			end
+		end)
+	else
+		if ExtraConnections.InfiniteAmmo then ExtraConnections.InfiniteAmmo:Disconnect(); ExtraConnections.InfiniteAmmo = nil end
+	end
+end
+
+local function updateAutoShoot()
+	if ExtraToggles.AutoShoot then
+		if ExtraConnections.AutoShoot then return end
+		ExtraConnections.AutoShoot = RunService.RenderStepped:Connect(function()
+			local mouse = LocalPlayer:GetMouse()
+			local target = getClosestPlayer()
+			if target and getHRP(target) then
+				local root = getHRP(target)
+				local screenPos = Camera:WorldToViewportPoint(root.Position)
+				if screenPos.Z > 0 then
+					mouse.Target = root
+					mouse.TargetSurface = Enum.NormalId.Front
+					local tool = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Tool")
+					if tool then tool:Activate() end
+				end
+			end
+		end)
+	else
+		if ExtraConnections.AutoShoot then ExtraConnections.AutoShoot:Disconnect(); ExtraConnections.AutoShoot = nil end
+	end
+end
+
+local function updateWallbang()
+	if ExtraToggles.Wallbang then
+		if ExtraConnections.Wallbang then return end
+		ExtraConnections.Wallbang = RunService.Stepped:Connect(function()
+			for _, v in ipairs(workspace:GetDescendants()) do
+				if v:IsA("BasePart") and v.Material ~= Enum.Material.Air then v.CanCollide = false end
+			end
+		end)
+	else
+		if ExtraConnections.Wallbang then ExtraConnections.Wallbang:Disconnect(); ExtraConnections.Wallbang = nil end
+		for _, v in ipairs(workspace:GetDescendants()) do
+			if v:IsA("BasePart") then v.CanCollide = true end
+		end
+	end
+end
+
+local function updateESP()
+	if ExtraToggles.ESP then
+		if ExtraConnections.ESP then return end
+		ExtraConnections.ESP = RunService.RenderStepped:Connect(function()
+			for _, player in ipairs(Players:GetPlayers()) do
+				if player == LocalPlayer then continue end
+				local char = player.Character
+				if not char then continue end
+				local root = getHRP(player)
+				if not root then continue end
+				local pos, onScreen = Camera:WorldToViewportPoint(root.Position)
+				if onScreen then
+					local gui = ESPObjects[player]
+					if not gui then
+						gui = Instance.new("BillboardGui")
+						gui.Name = "ESP_"..player.Name
+						gui.Adornee = root
+						gui.Size = UDim2.new(0, 200, 0, 50)
+						gui.StudsOffset = Vector3.new(0, 3, 0)
+						gui.AlwaysOnTop = true
+						local label = Instance.new("TextLabel", gui)
+						label.Name = "Text"
+						label.Size = UDim2.new(1,0,1,0)
+						label.BackgroundTransparency = 1
+						label.TextColor3 = Color3.new(1,1,1)
+						label.TextStrokeTransparency = 0.5
+						label.TextScaled = true
+						local healthBg = Instance.new("Frame", gui)
+						healthBg.Name = "HealthBg"
+						healthBg.Size = UDim2.new(0, 4, 0, 40)
+						healthBg.Position = UDim2.new(0, -10, 0.5, -20)
+						healthBg.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+						healthBg.BorderSizePixel = 0
+						healthBg.Visible = false
+						local healthBar = Instance.new("Frame", healthBg)
+						healthBar.Name = "HealthBar"
+						healthBar.Size = UDim2.new(1, 0, 1, 0)
+						healthBar.Position = UDim2.new(0, 0, 0, 0)
+						healthBar.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+						healthBar.BorderSizePixel = 0
+						gui.Parent = root
+						ESPObjects[player] = gui
+					end
+					
+					local hum = getHumanoid(player)
+					local health = hum and hum.Health or 0
+					local maxHealth = hum and hum.MaxHealth or 100
+					local text = ""
+					if ExtraToggles.ShowName then text = text .. player.Name .. "\n" end
+					if ExtraToggles.ShowDistance then
+						local dist = (root.Position - Camera.CFrame.Position).Magnitude
+						text = text .. math.floor(dist) .. "m\n"
+					end
+					text = text .. math.floor(health) .. " HP"
+					gui.Text.Text = text
+					if ExtraToggles.ShowHealthBar then
+						gui.HealthBg.Visible = true
+						local healthPercent = math.clamp(health / maxHealth, 0, 1)
+						gui.HealthBg.HealthBar.Size = UDim2.new(1, 0, healthPercent, 0)
+						gui.HealthBg.HealthBar.Position = UDim2.new(0, 0, 1 - healthPercent, 0)
+						gui.HealthBg.HealthBar.BackgroundColor3 = Color3.fromRGB(255 - (healthPercent * 255), healthPercent * 255, 0)
+					else
+						gui.HealthBg.Visible = false
+					end
+				else
+					if ESPObjects[player] then ESPObjects[player]:Destroy(); ESPObjects[player] = nil end
+				end
+			end
+		end)
+	else
+		if ExtraConnections.ESP then ExtraConnections.ESP:Disconnect(); ExtraConnections.ESP = nil end
+		for _, gui in pairs(ESPObjects) do pcall(gui.Destroy, gui) end
+		ESPObjects = {}
+	end
+end
+
+local function updateNativeChams()
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= LocalPlayer then
+			local char = player.Character
+			if char then
+				local hl = char:FindFirstChild("NativeChams")
+				if ExtraToggles.ChamsEnabled then
+					if not hl then
+						hl = Instance.new("Highlight")
+						hl.Name = "NativeChams"
+						hl.Parent = char
+					end
+					hl.FillColor = Color3.fromRGB(255, 0, 0)
+					hl.FillTransparency = ExtraToggles.ChamsFillTransparency
+					hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+					hl.OutlineTransparency = 0
+					hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+				else
+					if hl then hl:Destroy() end
+				end
+			end
+		end
+	end
+end
+
+local function updateOffScreenIndicators()
+	if not ExtraToggles.OffScreenIndicators then
+		for _, triangle in pairs(OffScreenObjects) do
+			if triangle.Remove then triangle:Remove() end
+		end
+		OffScreenObjects = {}
+		return
+	end
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player == LocalPlayer then continue end
+		local char = player.Character
+		if not char then 
+			if OffScreenObjects[player] then OffScreenObjects[player]:Remove(); OffScreenObjects[player] = nil end
+			continue 
+		end
+		local root = getHRP(player)
+		if not root then continue end
+		local pos, onScreen = Camera:WorldToViewportPoint(root.Position)
+		if not onScreen and (getHumanoid(player) and getHumanoid(player).Health > 0) then
+			local triangle = OffScreenObjects[player]
+			if not triangle then
+				if Drawing then
+					triangle = Drawing.new("Triangle")
+					triangle.Color = Color3.fromRGB(255, 50, 50)
+					triangle.Filled = true
+					triangle.Thickness = 1
+					triangle.Transparency = 1
+					OffScreenObjects[player] = triangle
+				end
+			end
+			if triangle then
+				local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+				local direction = Vector3.new(pos.X - center.X, pos.Y - center.Y, 0).Unit
+				local angle = math.atan2(direction.Y, direction.X)
+				local radius = ExtraToggles.IndicatorRadius or 150
+				local size = ExtraToggles.IndicatorSize or 20
+				local pointPos = center + Vector2.new(math.cos(angle) * radius, math.sin(angle) * radius)
+				local pointLeft = center + Vector2.new(math.cos(angle - 0.2) * (radius - size), math.sin(angle - 0.2) * (radius - size))
+				local pointRight = center + Vector2.new(math.cos(angle + 0.2) * (radius - size), math.sin(angle + 0.2) * (radius - size))
+				triangle.PointA = pointPos
+				triangle.PointB = pointLeft
+				triangle.PointC = pointRight
+				triangle.Visible = true
+			end
+		else
+			if OffScreenObjects[player] then OffScreenObjects[player].Visible = false end
+		end
+	end
+end
+
+local function updateSkeletonESP()
+	if ExtraToggles.SkeletonESP then
+		if ExtraConnections.SkeletonESP then return end
+		local lines = {}
+		ExtraConnections.SkeletonESP = RunService.RenderStepped:Connect(function()
+			for _, player in ipairs(Players:GetPlayers()) do
+				if player == LocalPlayer then continue end
+				local char = player.Character
+				if not char then continue end
+				local parts = {
+					Head = char:FindFirstChild("Head"),
+					Torso = char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso"),
+					LeftArm = char:FindFirstChild("LeftUpperArm") or char:FindFirstChild("LeftArm"),
+					RightArm = char:FindFirstChild("RightUpperArm") or char:FindFirstChild("RightArm"),
+					LeftLeg = char:FindFirstChild("LeftUpperLeg") or char:FindFirstChild("LeftLeg"),
+					RightLeg = char:FindFirstChild("RightUpperLeg") or char:FindFirstChild("RightLeg"),
+				}
+				if parts.Head and parts.Torso then
+					local headPos = Camera:WorldToViewportPoint(parts.Head.Position)
+					local torsoPos = Camera:WorldToViewportPoint(parts.Torso.Position)
+					if headPos.Z > 0 and torsoPos.Z > 0 then
+						local line = lines[player] or Drawing.new("Line")
+						line.From = Vector2.new(headPos.X, headPos.Y)
+						line.To = Vector2.new(torsoPos.X, torsoPos.Y)
+						line.Color = Color3.fromRGB(255,0,0)
+						line.Thickness = 2
+						line.Visible = true
+						lines[player] = line
+					end
+				end
+			end
+			for player, line in pairs(lines) do
+				if not player or not player.Character then
+					line:Remove()
+					lines[player] = nil
+				end
+			end
+		end)
+	else
+		if ExtraConnections.SkeletonESP then ExtraConnections.SkeletonESP:Disconnect(); ExtraConnections.SkeletonESP = nil end
+		for _, line in pairs(Drawings) do if line and line.Remove then line:Remove() end end
+		Drawings = {}
+	end
+end
+
+local function createRadar()
+	if RadarGui then RadarGui:Destroy() end
+	RadarGui = Instance.new("ScreenGui")
+	RadarGui.Name = "Radar"
+	RadarGui.Parent = LocalPlayer.PlayerGui
+	local frame = Instance.new("Frame", RadarGui)
+	frame.Size = UDim2.new(0, 200, 0, 200)
+	frame.Position = UDim2.new(1, -210, 1, -210)
+	frame.BackgroundColor3 = Color3.fromRGB(0,0,0)
+	frame.BackgroundTransparency = 0.5
+	frame.BorderSizePixel = 0
+	return RadarGui
+end
+
+local function updateRadar()
+	if ExtraToggles.Radar then
+		if not RadarGui then createRadar() end
+		if ExtraConnections.Radar then return end
+		local frame = RadarGui:FindFirstChild("Frame")
+		ExtraConnections.Radar = RunService.RenderStepped:Connect(function()
+			if not frame then return end
+			local localPos = getHRP(LocalPlayer)
+			if not localPos then return end
+			for _, child in ipairs(frame:GetChildren()) do child:Destroy() end
+			for _, player in ipairs(Players:GetPlayers()) do
+				if player ~= LocalPlayer then
+					local targetPos = getHRP(player)
+					if targetPos then
+						local relative = targetPos.Position - localPos.Position
+						local angle = math.atan2(relative.Z, relative.X)
+						local radius = math.min(relative.Magnitude / 20, 90)
+						local x = math.sin(angle) * radius + 100
+						local z = math.cos(angle) * radius + 100
+						local dot = Instance.new("ImageLabel", frame)
+						dot.Size = UDim2.new(0, 5, 0, 5)
+						dot.Position = UDim2.new(0, x-2.5, 0, z-2.5)
+						dot.BackgroundColor3 = Color3.fromRGB(255,255,255)
+						dot.BackgroundTransparency = 0
+						dot.Image = "rbxassetid://0"
+					end
+				end
+			end
+		end)
+	else
+		if ExtraConnections.Radar then ExtraConnections.Radar:Disconnect(); ExtraConnections.Radar = nil end
+		if RadarGui then RadarGui:Destroy(); RadarGui = nil end
+	end
+end
+
+local function updateTargetMarker()
+	if ExtraToggles.ShowTargetMarker then
+		if ExtraConnections.Marker then return end
+		local marker = Instance.new("BillboardGui")
+		marker.Name = "TargetMarker"
+		marker.Size = UDim2.new(0, 50, 0, 50)
+		marker.AlwaysOnTop = true
+		local triangle = Instance.new("ImageLabel", marker)
+		triangle.Size = UDim2.new(1,0,1,0)
+		triangle.BackgroundTransparency = 1
+		triangle.Image = "rbxassetid://0"
+		triangle.ImageColor3 = Color3.fromRGB(255,0,0)
+		marker.Parent = LocalPlayer.PlayerGui
+		ExtraConnections.Marker = RunService.RenderStepped:Connect(function()
+			local target = nil
+			local minAngle = 50
+			local mousePos = UserInputService:GetMouseLocation()
+			for _, player in ipairs(Players:GetPlayers()) do
+				if player ~= LocalPlayer and player.Character then
+					if ExtraToggles.AimbotTeamCheck and player.Team == LocalPlayer.Team then continue end
+					local part = getHRP(player)
+					if part then
+						local screenPos = Camera:WorldToViewportPoint(part.Position)
+						if screenPos.Z > 0 then
+							local dx = screenPos.X - mousePos.X
+							local dy = screenPos.Y - mousePos.Y
+							local angle = math.sqrt(dx^2 + dy^2)
+							if angle < minAngle then
+								minAngle = angle
+								target = player
+							end
+						end
+					end
+				end
+			end
+			if target and target.Character then
+				marker.Adornee = getHRP(target)
+				marker.Enabled = true
+			else
+				marker.Enabled = false
+			end
+		end)
+	else
+		if ExtraConnections.Marker then ExtraConnections.Marker:Disconnect(); ExtraConnections.Marker = nil end
+		if LocalPlayer.PlayerGui:FindFirstChild("TargetMarker") then LocalPlayer.PlayerGui.TargetMarker:Destroy() end
+	end
+end
+
+local function updateFullbright()
+	if ExtraToggles.Fullbright then
+		Lighting.Brightness = 2
+		Lighting.ClockTime = 12
+		Lighting.FogEnd = 100000
+		Lighting.GlobalShadows = false
+	else
+		Lighting.Brightness = 1
+		Lighting.GlobalShadows = true
+	end
+end
+
+local function updateNoFog()
+	Lighting.FogEnd = ExtraToggles.NoFog and 100000 or 100000
+end
+
+local function updateThirdPerson()
+	if ExtraToggles.ThirdPerson then
+		Camera.CameraType = Enum.CameraType.Classic
+		Camera.FieldOfView = 70
+	else
+		Camera.CameraType = Enum.CameraType.Custom
+	end
+end
+
+local function updateFOV()
+	if ExtraToggles.FOVChanger then Camera.FieldOfView = FOVValue else Camera.FieldOfView = 70 end
+end
+
+local function updateCrosshair()
+	if ExtraToggles.CustomCrosshair and not Crosshair then
+		Crosshair = Instance.new("ImageLabel")
+		Crosshair.Name = "Crosshair"
+		Crosshair.Image = "rbxassetid://0"
+		Crosshair.Size = UDim2.new(0, 20, 0, 20)
+		Crosshair.Position = UDim2.new(0.5, -10, 0.5, -10)
+		Crosshair.BackgroundTransparency = 1
+		Crosshair.Parent = LocalPlayer.PlayerGui
+	elseif not ExtraToggles.CustomCrosshair and Crosshair then
+		Crosshair:Destroy()
+		Crosshair = nil
+	end
+end
+
+local function updateAutoRespawn()
+	if ExtraToggles.AutoRespawn then
+		if ExtraConnections.AutoRespawn then return end
+		ExtraConnections.AutoRespawn = LocalPlayer.CharacterAdded:Connect(function()
+			task.wait(0.5)
+			local hum = getHumanoid(LocalPlayer)
+			if hum and hum.Health <= 0 then LocalPlayer:LoadCharacter() end
+		end)
+	else
+		if ExtraConnections.AutoRespawn then ExtraConnections.AutoRespawn:Disconnect(); ExtraConnections.AutoRespawn = nil end
+	end
+end
+
+local function updateGodMode()
+	if ExtraToggles.GodMode then
+		if ExtraConnections.GodMode then return end
+		ExtraConnections.GodMode = RunService.Stepped:Connect(function()
+			local hum = getHumanoid(LocalPlayer)
+			if hum then hum.Health = hum.MaxHealth end
+		end)
+	else
+		if ExtraConnections.GodMode then ExtraConnections.GodMode:Disconnect(); ExtraConnections.GodMode = nil end
+	end
+end
+
+local function updateNoFallDamage()
+	if ExtraToggles.NoFallDamage then
+		if ExtraConnections.NoFallDamage then return end
+		ExtraConnections.NoFallDamage = LocalPlayer.CharacterAdded:Connect(function(char)
+			char:WaitForChild("Humanoid").StateChanged:Connect(function(old, new)
+				if new == Enum.HumanoidStateType.FallingDown then
+					char.Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+				end
+			end)
+		end)
+	else
+		if ExtraConnections.NoFallDamage then ExtraConnections.NoFallDamage:Disconnect(); ExtraConnections.NoFallDamage = nil end
+	end
+end
+
+local function teleportToMouse()
+	local mouse = LocalPlayer:GetMouse()
+	local root = getHRP(LocalPlayer)
+	if root then root.CFrame = mouse.Hit end
+end
+
+local function killAll()
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= LocalPlayer then
+			local hum = getHumanoid(player)
+			if hum then hum.Health = 0 end
+		end
+	end
+end
+
+local function updateTime()
+	if ExtraToggles.TimeChanger then Lighting.ClockTime = ExtraToggles.TimeValue else Lighting.ClockTime = 12 end
+end
+
+local function updateGravity()
+	if ExtraToggles.GravityChanger then workspace.Gravity = ExtraToggles.GravityValue else workspace.Gravity = 196.2 end
+end
+
+local function updateRemoveClouds()
+	for _, v in ipairs(workspace:GetDescendants()) do
+		if v:IsA("Part") and v.Name:lower():find("cloud") then v.Transparency = ExtraToggles.RemoveClouds and 1 or 0 end
+	end
+end
+
+local function updateNoPlants()
+	for _, v in ipairs(workspace:GetDescendants()) do
+		if v:IsA("Part") and (v.Name:lower():find("grass") or v.Name:lower():find("plant")) then v.Transparency = ExtraToggles.NoPlants and 1 or 0 end
+	end
+end
+
+local function updateAutoReconnect()
+	if ExtraToggles.AutoReconnect then
+		if ExtraConnections.AutoReconnect then return end
+		ExtraConnections.AutoReconnect = LocalPlayer.OnTeleport:Connect(function(state)
+			if state == Enum.TeleportState.Disconnected then TeleportService:Teleport(game.PlaceId) end
+		end)
+	else
+		if ExtraConnections.AutoReconnect then ExtraConnections.AutoReconnect:Disconnect(); ExtraConnections.AutoReconnect = nil end
+	end
+end
+
+local function updateAntiAFK()
+	if ExtraToggles.AntiAFK then
+		if ExtraConnections.AntiAFK then return end
+		ExtraConnections.AntiAFK = RunService.RenderStepped:Connect(function()
+			VirtualUser:CaptureController()
+			VirtualUser:ClickButton2(Vector2.new())
+		end)
+	else
+		if ExtraConnections.AntiAFK then ExtraConnections.AntiAFK:Disconnect(); ExtraConnections.AntiAFK = nil end
+	end
+end
+
+local function quickRespawn()
+	if LocalPlayer.Character then LocalPlayer.Character:BreakJoints() end
+end
+
+local function updateInfiniteTools()
+	if ExtraToggles.InfiniteTools then
+		if ExtraConnections.InfiniteTools then return end
+		ExtraConnections.InfiniteTools = RunService.Stepped:Connect(function()
+			for _, tool in ipairs(LocalPlayer.Backpack:GetChildren()) do tool.Parent = LocalPlayer.Character end
+		end)
+	else
+		if ExtraConnections.InfiniteTools then ExtraConnections.InfiniteTools:Disconnect(); ExtraConnections.InfiniteTools = nil end
+	end
+end
+
+local function serverHop()
+	local servers = {}
+	local Http = game:GetService("HttpService")
+	local success, response = pcall(function()
+		return game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?limit=100")
+	end)
+	if success then
+		local data = Http:JSONDecode(response)
+		for _, v in ipairs(data.data) do
+			if v.playing < v.maxPlayers then servers[#servers+1] = v.id end
+		end
+		if #servers > 0 then TeleportService:TeleportToPlaceInstance(game.PlaceId, servers[math.random(1, #servers)], LocalPlayer) end
+	end
+end
+
+local spamRunning = false
+local function chatSpam()
+	if ExtraToggles.ChatSpam and not spamRunning then
+		spamRunning = true
+		task.spawn(function()
+			while ExtraToggles.ChatSpam do
+				task.wait(2)
+				local args = {[1] = ExtraToggles.SpamMessage, [2] = "All"}
+				local chat = game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents")
+				if chat then
+					local say = chat:FindFirstChild("SayMessageRequest")
+					if say then say:FireServer(unpack(args)) end
+				end
+			end
+		end)
+	elseif not ExtraToggles.ChatSpam and spamRunning then
+		spamRunning = false
+	end
+end
+
+local function updateJumpPower()
+	if ExtraToggles.JumpPower then
+		if ExtraConnections.JumpPower then return end
+		ExtraConnections.JumpPower = RunService.RenderStepped:Connect(function()
+			local hum = getHumanoid(LocalPlayer)
+			if hum then hum.UseJumpPower = true; hum.JumpPower = ExtraToggles.JumpPowerValue end
+		end)
+	else
+		if ExtraConnections.JumpPower then ExtraConnections.JumpPower:Disconnect(); ExtraConnections.JumpPower = nil end
+		local hum = getHumanoid(LocalPlayer)
+		if hum then hum.UseJumpPower = true; hum.JumpPower = 50 end
+	end
+end
+
+local function updateTeleportAboveEnemy()
+	if ExtraToggles.TeleportAboveEnemy then
+		if ExtraConnections.TeleportAboveEnemy then return end
+		ExtraConnections.TeleportAboveEnemy = RunService.RenderStepped:Connect(function()
+			local target = getClosestPlayer()
+			if target then
+				local root = getHRP(LocalPlayer)
+				local targetRoot = getHRP(target)
+				if root and targetRoot then root.CFrame = targetRoot.CFrame + Vector3.new(0, ExtraToggles.TeleportAboveHeight, 0) end
+			end
+		end)
+	else
+		if ExtraConnections.TeleportAboveEnemy then ExtraConnections.TeleportAboveEnemy:Disconnect(); ExtraConnections.TeleportAboveEnemy = nil end
+	end
+end
+
+local function updateOrbit()
+	if not ExtraToggles.OrbitEnabled then
+		if ExtraConnections.Orbit then ExtraConnections.Orbit:Disconnect(); ExtraConnections.Orbit = nil end
+		return
+	end
+	if ExtraConnections.Orbit then return end
+	ExtraConnections.Orbit = RunService.Heartbeat:Connect(function()
+		local target = getClosestPlayer()
+		if not target or not target.Character then return end
+		local hrp = getHRP(target)
+		local myHrp = getHRP(LocalPlayer)
+		if not hrp or not myHrp then return end
+
+		local baseDistance = ExtraToggles.OrbitDistance
+		local baseSpeed = ExtraToggles.OrbitSpeed
+		local distance = baseDistance
+		if ExtraToggles.OrbitDynamicRadius then
+			OrbitRadiusTime = OrbitRadiusTime + (RunService.Heartbeat:Wait() or 0.016)
+			local radiusOffset = math.sin(OrbitRadiusTime * ExtraToggles.OrbitRadiusFrequency * 2 * math.pi) * ExtraToggles.OrbitRadiusAmplitude
+			distance = math.max(1, baseDistance + radiusOffset)
+		end
+		local speed = baseSpeed
+		if ExtraToggles.OrbitDynamicSpeed then
+			OrbitSpeedTime = OrbitSpeedTime + (RunService.Heartbeat:Wait() or 0.016)
+			local speedOffset = math.sin(OrbitSpeedTime * ExtraToggles.OrbitSpeedFrequency * 2 * math.pi) * ExtraToggles.OrbitSpeedAmplitude
+			speed = math.max(0.1, baseSpeed + speedOffset)
+			speed = math.min(2000, speed)
+		end
+		local rx = distance; local rz = distance
+		if ExtraToggles.OrbitEllipse then
+			rx = distance * ExtraToggles.OrbitEllipseXRatio
+			rz = distance * ExtraToggles.OrbitEllipseZRatio
+		end
+		local dt = RunService.Heartbeat:Wait() or 0.016
+		OrbitAngle = (OrbitAngle or 0) + math.rad(speed) * dt
+		local x = math.cos(OrbitAngle) * rx
+		local z = math.sin(OrbitAngle) * rz
+		local yOffset = 0
+		if ExtraToggles.OrbitHeightMode then
+			local time = tick()
+			yOffset = math.sin(time * ExtraToggles.OrbitHeightFrequency * 2 * math.pi) * ExtraToggles.OrbitHeightAmplitude
+		end
+		myHrp.CFrame = CFrame.new(hrp.Position + Vector3.new(x, yOffset, z))
+	end)
+end
+
+local function updateAntiAim()
+	if not ExtraToggles.AntiAim then
+		if ExtraConnections.AntiAim then ExtraConnections.AntiAim:Disconnect(); ExtraConnections.AntiAim = nil end
+		return
+	end
+	if ExtraConnections.AntiAim then return end
+	ExtraConnections.AntiAim = RunService.RenderStepped:Connect(function()
+		local char = LocalPlayer.Character
+		if not char then return end
+		local root = char:FindFirstChild("HumanoidRootPart")
+		if not root then return end
+		local now = tick()
+		if now - LastAntiAimTime < (1 / ExtraToggles.AntiAimFrequency) then return end
+		LastAntiAimTime = now
+		local mode = ExtraToggles.AntiAimMode
+		local speed = ExtraToggles.AntiAimSpeed
+		local radius = ExtraToggles.AntiAimRadius
+		local angle = now * speed
+		if mode == "FullBody" then
+			root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(angle), 0)
+		elseif mode == "Rotate" then
+			root.CFrame = root.CFrame * CFrame.Angles(0, math.rad(angle), math.rad(angle))
+		elseif mode == "Shake" then
+			root.CFrame = root.CFrame * CFrame.Angles(math.sin(angle)*radius, math.sin(angle*2)*radius, 0)
+		elseif mode == "Jitter" then
+			local jitter = Vector3.new(math.sin(angle)*radius, math.cos(angle*1.3)*radius, math.sin(angle*1.7)*radius)
+			root.CFrame = root.CFrame * CFrame.Angles(jitter.X, jitter.Y, jitter.Z)
+		elseif mode == "Spiral" then
+			root.CFrame = root.CFrame * CFrame.Angles(math.sin(angle)*radius, angle, math.cos(angle)*radius)
+		elseif mode == "Figure8" then
+			root.CFrame = root.CFrame * CFrame.Angles(math.sin(angle)*radius, math.sin(angle*2)*radius, 0)
+		end
+	end)
+end
+
+local function updateSpeed()
+	if getgenv().speed then
+		getgenv().speed.enabled = ExtraToggles.SpeedEnabled
+		getgenv().speed.speed = ExtraToggles.SpeedAmount
+		getgenv().speed.keybind = keyToEnum(ExtraToggles.SpeedKey)
+	end
+end
+
+local function updateTargetHud()
+	if getgenv().targethud then getgenv().targethud.enabled = ExtraToggles.TargetHudEnabled end
+end
+
+-- ==========================================
+-- ========== UI 建構 (包含 CSync 整合) ========
+-- ==========================================
+local Tabs = {
+	Combat = Window:AddTab("Combat & Aim", "sword"),
+	Movement = Window:AddTab("Movement", "walk"),
+	Visuals = Window:AddTab("Visuals & World", "eye"),
+	Misc = Window:AddTab("Misc", "tool"),
+	Settings = Window:AddTab("Settings", "settings"),
+}
+
+-- 1. Combat & Aim 標籤頁
+local CombatGroup = Tabs.Combat:AddLeftGroupbox("Combat Modifications")
+CombatGroup:AddToggle("NoRecoil", { Text = "No Recoil", Default = false, Callback = function(v) ExtraToggles.NoRecoil = v; updateNoRecoil() end })
+CombatGroup:AddToggle("RapidFire", { Text = "Rapid Fire", Default = false, Callback = function(v) ExtraToggles.RapidFire = v; updateRapidFire() end })
+CombatGroup:AddToggle("InfiniteAmmo", { Text = "Infinite Ammo", Default = false, Callback = function(v) ExtraToggles.InfiniteAmmo = v; updateInfiniteAmmo() end })
+CombatGroup:AddToggle("AutoShoot", { Text = "Auto Shoot", Default = false, Callback = function(v) ExtraToggles.AutoShoot = v; updateAutoShoot() end })
+CombatGroup:AddToggle("Wallbang", { Text = "Wallbang", Default = false, Callback = function(v) ExtraToggles.Wallbang = v; updateWallbang() end })
+
+local OrbitGroup = Tabs.Combat:AddLeftGroupbox("Orbit Settings")
+OrbitGroup:AddToggle("OrbitEnabled", { Text = "Enable Orbit", Default = false, Callback = function(v) ExtraToggles.OrbitEnabled = v; updateOrbit() end })
+OrbitGroup:AddSlider("OrbitDistance", { Text = "Orbit Distance", Default = 10, Min = 1, Max = 100, Rounding = 1, Callback = function(v) ExtraToggles.OrbitDistance = v end })
+OrbitGroup:AddSlider("OrbitSpeed", { Text = "Orbit Speed", Default = 5, Min = 1, Max = 3000, Rounding = 1, Callback = function(v) ExtraToggles.OrbitSpeed = v end })
+
+local OrbitEnhanceGroup = Tabs.Combat:AddLeftGroupbox("Orbit Enhancements")
+OrbitEnhanceGroup:AddToggle("OrbitHeightMode", { Text = "Height Bobbing", Default = false, Callback = function(v) ExtraToggles.OrbitHeightMode = v end })
+OrbitEnhanceGroup:AddSlider("OrbitHeightAmplitude", { Text = "Height Amplitude", Default = 2, Min = 0, Max = 10, Rounding = 1, Callback = function(v) ExtraToggles.OrbitHeightAmplitude = v end })
+OrbitEnhanceGroup:AddSlider("OrbitHeightFrequency", { Text = "Height Frequency", Default = 1, Min = 0.2, Max = 5, Rounding = 1, Callback = function(v) ExtraToggles.OrbitHeightFrequency = v end })
+OrbitEnhanceGroup:AddToggle("OrbitEllipse", { Text = "Ellipse Path", Default = false, Callback = function(v) ExtraToggles.OrbitEllipse = v end })
+OrbitEnhanceGroup:AddSlider("OrbitEllipseXRatio", { Text = "X Axis Ratio", Default = 1, Min = 0.2, Max = 2, Rounding = 1, Callback = function(v) ExtraToggles.OrbitEllipseXRatio = v end })
+OrbitEnhanceGroup:AddSlider("OrbitEllipseZRatio", { Text = "Z Axis Ratio", Default = 1, Min = 0.2, Max = 2, Rounding = 1, Callback = function(v) ExtraToggles.OrbitEllipseZRatio = v end })
+OrbitEnhanceGroup:AddToggle("OrbitDynamicRadius", { Text = "Dynamic Radius", Default = false, Callback = function(v) ExtraToggles.OrbitDynamicRadius = v end })
+OrbitEnhanceGroup:AddSlider("OrbitRadiusAmplitude", { Text = "Radius Amplitude", Default = 2, Min = 0, Max = 10, Rounding = 1, Callback = function(v) ExtraToggles.OrbitRadiusAmplitude = v end })
+OrbitEnhanceGroup:AddSlider("OrbitRadiusFrequency", { Text = "Radius Frequency", Default = 0.5, Min = 0.2, Max = 3, Rounding = 1, Callback = function(v) ExtraToggles.OrbitRadiusFrequency = v end })
+OrbitEnhanceGroup:AddToggle("OrbitDynamicSpeed", { Text = "Dynamic Speed", Default = false, Callback = function(v) ExtraToggles.OrbitDynamicSpeed = v end })
+OrbitEnhanceGroup:AddSlider("OrbitSpeedAmplitude", { Text = "Speed Amplitude", Default = 2, Min = 0, Max = 20, Rounding = 1, Callback = function(v) ExtraToggles.OrbitSpeedAmplitude = v end })
+OrbitEnhanceGroup:AddSlider("OrbitSpeedFrequency", { Text = "Speed Frequency", Default = 0.3, Min = 0.2, Max = 3, Rounding = 1, Callback = function(v) ExtraToggles.OrbitSpeedFrequency = v end })
+
+local AntiAimGroup = Tabs.Combat:AddLeftGroupbox("Anti Aim")
+AntiAimGroup:AddToggle("AntiAim", { Text = "Enable Anti Aim", Default = false, Callback = function(v) ExtraToggles.AntiAim = v; updateAntiAim() end })
+AntiAimGroup:AddDropdown("AntiAimMode", { Values = {"FullBody", "Rotate", "Shake", "Jitter", "Spiral", "Figure8"}, Default = "FullBody", Text = "Anti Aim Mode", Callback = function(v) ExtraToggles.AntiAimMode = v end })
+AntiAimGroup:AddSlider("AntiAimSpeed", { Text = "Rotation Speed", Default = 180, Min = 10, Max = 1000, Rounding = 0, Callback = function(v) ExtraToggles.AntiAimSpeed = v end })
+AntiAimGroup:AddSlider("AntiAimRadius", { Text = "Shake Radius", Default = 1.5, Min = 0.1, Max = 10, Rounding = 1, Callback = function(v) ExtraToggles.AntiAimRadius = v end })
+AntiAimGroup:AddSlider("AntiAimFreq", { Text = "Anti-Aim Frequency", Default = 10, Min = 5, Max = 30, Rounding = 1, Callback = function(v) ExtraToggles.AntiAimFrequency = v end })
+AntiAimGroup:AddToggle("MultiAxis", { Text = "Multi-Axis", Default = false, Callback = function(v) ExtraToggles.AntiAimMultiAxis = v end })
+
+-- 右側 Aimbot 面板
+local AimbotPlusGroup = Tabs.Combat:AddRightGroupbox("Aimbot Settings")
+AimbotPlusGroup:AddToggle("AimbotEnabled", { Text = "Enable Aimbot", Default = false, Callback = function(v) ExtraToggles.AimbotEnabled = v; updateAimbot() end })
+AimbotPlusGroup:AddToggle("ShowFOV", { Text = "Show FOV Circle", Default = false, Callback = function(v) getgenv().ShowFOVCircle = v end })
+
+-- FOV 自定義區域
+AimbotPlusGroup:AddLabel('FOV Circle Color'):AddColorPicker('FOVColorPicker', { Default = Color3.fromRGB(255, 255, 255), Title = 'FOV Color', Callback = function(v) ExtraToggles.FOVColor = v end })
+AimbotPlusGroup:AddToggle("FOVFilled", { Text = "Fill FOV Circle", Default = false, Callback = function(v) ExtraToggles.FOVFilled = v end })
+AimbotPlusGroup:AddSlider("FOVTransparency", { Text = "FOV Transparency", Default = 0.5, Min = 0.1, Max = 1, Rounding = 2, Callback = function(v) ExtraToggles.FOVTransparency = v end })
+AimbotPlusGroup:AddSlider("AimbotFOV", { Text = "FOV Radius", Default = 50, Min = 10, Max = 500, Rounding = 1, Callback = function(v) ExtraToggles.AimbotFOV = v; updateAimbot() end })
+
+AimbotPlusGroup:AddDropdown("AimbotKey", { Values = {"MB1","MB2","MB3"}, Default = "MB2", Text = "Trigger Key", Callback = function(v) ExtraToggles.AimbotKey = v; updateAimbot() end })
+AimbotPlusGroup:AddToggle("AimbotPart", { Text = "Aim Head (off = body)", Default = false, Callback = function(v) ExtraToggles.AimbotPart = v; updateAimbot() end })
+AimbotPlusGroup:AddToggle("AimbotHoldMode", { Text = "Hold to Aim", Default = false, Callback = function(v) ExtraToggles.AimbotHoldMode = v; updateAimbot() end })
+AimbotPlusGroup:AddSlider("AimbotSmoothnessValue", { Text = "Smoothness", Default = 0.5, Min = 0, Max = 1, Rounding = 2, Callback = function(v) ExtraToggles.AimbotSmoothnessValue = v; updateAimbot() end })
+AimbotPlusGroup:AddToggle("ShowTargetMarker", { Text = "Show Target Marker", Default = false, Callback = function(v) ExtraToggles.ShowTargetMarker = v; updateTargetMarker() end })
+
+local AimbotEnhanceGroup = Tabs.Combat:AddRightGroupbox("Aimbot Enhancements")
+AimbotEnhanceGroup:AddToggle("TeamCheck", { Text = "Team Check (Ignore Teammates)", Default = false, Callback = function(v) ExtraToggles.AimbotTeamCheck = v; updateAimbot() end })
+AimbotEnhanceGroup:AddToggle("WallCheck", { Text = "Wall Check (障礙物檢測)", Default = false, Callback = function(v) ExtraToggles.WallCheck = v; updateAimbot() end })
+AimbotEnhanceGroup:AddSlider("HitChance", { Text = "Hit Chance (%)", Default = 100, Min = 0, Max = 100, Rounding = 1, Callback = function(v) ExtraToggles.AimbotHitChance = v; updateAimbot() end })
+AimbotEnhanceGroup:AddToggle("Prediction", { Text = "Enable Prediction", Default = false, Callback = function(v) ExtraToggles.AimbotPrediction = v; updateAimbot() end })
+AimbotEnhanceGroup:AddSlider("PredictionStrength", { Text = "Prediction Strength", Default = 0.5, Min = 0, Max = 1, Rounding = 2, Callback = function(v) ExtraToggles.AimbotPredictionStrength = v; updateAimbot() end })
+AimbotEnhanceGroup:AddSlider("SwitchDelay", { Text = "Switch Delay (s)", Default = 0, Min = 0, Max = 2, Rounding = 1, Callback = function(v) ExtraToggles.AimbotSwitchDelay = v; updateAimbot() end })
+AimbotEnhanceGroup:AddToggle("DynamicFOV", { Text = "Dynamic FOV", Default = false, Callback = function(v) ExtraToggles.AimbotDynamicFOV = v; updateAimbot() end })
+
+local SilentAimGroup = Tabs.Combat:AddRightGroupbox("Silent Aim (Universal)")
+SilentAimGroup:AddToggle("SilentAim", { Text = "Enable Silent Aim", Default = false, Callback = function(v) ExtraToggles.SilentAim = v end })
+SilentAimGroup:AddToggle("ShowSilentAimFOV", { Text = "Show Silent Aim FOV", Default = false, Callback = function(v) ExtraToggles.ShowSilentAimFOV = v end })
+
+-- [新增] Silent Aim FOV 的顏色與外觀設定
+SilentAimGroup:AddLabel('Silent FOV Color'):AddColorPicker('SilentFOVColorPicker', { Default = Color3.fromRGB(255, 85, 85), Title = 'Silent FOV Color', Callback = function(v) ExtraToggles.SilentAimFOVColor = v end })
+SilentAimGroup:AddToggle("SilentAimFOVFilled", { Text = "Fill Silent FOV", Default = false, Callback = function(v) ExtraToggles.SilentAimFOVFilled = v end })
+SilentAimGroup:AddSlider("SilentAimFOVTransparency", { Text = "Silent FOV Transparency", Default = 1, Min = 0.1, Max = 1, Rounding = 2, Callback = function(v) ExtraToggles.SilentAimFOVTransparency = v end })
+
+SilentAimGroup:AddSlider("SilentAimFOV", { Text = "Silent Aim FOV", Default = 50, Min = 10, Max = 500, Rounding = 1, Callback = function(v) ExtraToggles.SilentAimFOV = v end })
+SilentAimGroup:AddToggle("SilentAimPart", { Text = "Target Head (off = body)", Default = false, Callback = function(v) ExtraToggles.SilentAimPart = v end })
+SilentAimGroup:AddSlider("SilentAimHitChance", { Text = "Hit Chance (%)", Default = 100, Min = 0, Max = 100, Rounding = 1, Callback = function(v) ExtraToggles.SilentAimHitChance = v end })
+
+-- 2. Movement 標籤頁
+local MovementGroup = Tabs.Movement:AddLeftGroupbox("Movement")
+MovementGroup:AddToggle("Fly", { Text = "Fly", Default = false, Callback = function(v) ExtraToggles.Fly = v; updateFly() end })
+MovementGroup:AddSlider("FlySpeed", { Text = "Fly Speed", Default = 50, Min = 10, Max = 500, Rounding = 1, Callback = function(v) ExtraToggles.FlySpeed = v end })
+MovementGroup:AddToggle("InfiniteJump", { Text = "Infinite Jump", Default = false, Callback = function(v) ExtraToggles.InfiniteJump = v; updateInfiniteJump() end })
+MovementGroup:AddToggle("Noclip", { Text = "Noclip", Default = false, Callback = function(v) ExtraToggles.Noclip = v; updateNoclip() end })
+MovementGroup:AddToggle("BHop", { Text = "Bunny Hop", Default = false, Callback = function(v) ExtraToggles.BHop = v; updateBHop() end })
+MovementGroup:AddToggle("SpiderClimb", { Text = "Spider Climb", Default = false, Callback = function(v) ExtraToggles.SpiderClimb = v; updateSpiderClimb() end })
+MovementGroup:AddToggle("Jetpack", { Text = "Jetpack", Default = false, Callback = function(v) ExtraToggles.Jetpack = v; updateJetpack() end })
+MovementGroup:AddToggle("AutoRespawn", { Text = "Auto Respawn", Default = false, Callback = function(v) ExtraToggles.AutoRespawn = v; updateAutoRespawn() end })
+MovementGroup:AddToggle("GodMode", { Text = "God Mode", Default = false, Callback = function(v) ExtraToggles.GodMode = v; updateGodMode() end })
+MovementGroup:AddToggle("NoFallDamage", { Text = "No Fall Damage", Default = false, Callback = function(v) ExtraToggles.NoFallDamage = v; updateNoFallDamage() end })
+MovementGroup:AddToggle("JumpPower", { Text = "Custom Jump Power", Default = false, Callback = function(v) ExtraToggles.JumpPower = v; updateJumpPower() end })
+MovementGroup:AddSlider("JumpPowerValue", { Text = "Jump Power", Default = 50, Min = 20, Max = 200, Rounding = 1, Callback = function(v) ExtraToggles.JumpPowerValue = v; if ExtraToggles.JumpPower then updateJumpPower() end end })
+
+local MovementPlusGroup = Tabs.Movement:AddRightGroupbox("Speed Module")
+MovementPlusGroup:AddToggle("SpeedEnabled", { Text = "Enable Speed", Default = false, Callback = function(v) ExtraToggles.SpeedEnabled = v; updateSpeed() end })
+MovementPlusGroup:AddSlider("SpeedAmount", { Text = "Speed Amount", Default = 16, Min = 0, Max = 1000, Rounding = 1, Callback = function(v) ExtraToggles.SpeedAmount = v; updateSpeed() end })
+MovementPlusGroup:AddDropdown("SpeedKey", { Values = {"Divide","Multiply","Subtract","Add","Space","LeftShift","RightShift","LeftControl","RightControl"}, Default = "Divide", Text = "Activation Key", Callback = function(v) ExtraToggles.SpeedKey = v; updateSpeed() end })
+
+-- 3. Visuals & World 標籤頁
+local VisualsGroup = Tabs.Visuals:AddLeftGroupbox("ESP & Visuals")
+VisualsGroup:AddToggle("ESP", { Text = "Basic ESP", Default = false, Callback = function(v) ExtraToggles.ESP = v; updateESP() end })
+VisualsGroup:AddToggle("ShowHealthBar", { Text = "Show ESP Health Bar", Default = false, Callback = function(v) ExtraToggles.ShowHealthBar = v; updateESP() end })
+VisualsGroup:AddToggle("SkeletonESP", { Text = "Skeleton ESP", Default = false, Callback = function(v) ExtraToggles.SkeletonESP = v; updateSkeletonESP() end })
+VisualsGroup:AddToggle("Radar", { Text = "Radar", Default = false, Callback = function(v) ExtraToggles.Radar = v; updateRadar() end })
+VisualsGroup:AddToggle("ShowName", { Text = "Show Name", Default = false, Callback = function(v) ExtraToggles.ShowName = v; updateESP() end })
+VisualsGroup:AddToggle("ShowDistance", { Text = "Show Distance", Default = false, Callback = function(v) ExtraToggles.ShowDistance = v; updateESP() end })
+VisualsGroup:AddToggle("Fullbright", { Text = "Fullbright", Default = false, Callback = function(v) ExtraToggles.Fullbright = v; updateFullbright() end })
+VisualsGroup:AddToggle("NoFog", { Text = "No Fog", Default = false, Callback = function(v) ExtraToggles.NoFog = v; updateNoFog() end })
+VisualsGroup:AddToggle("ThirdPerson", { Text = "Third Person", Default = false, Callback = function(v) ExtraToggles.ThirdPerson = v; updateThirdPerson() end })
+VisualsGroup:AddToggle("FOVChanger", { Text = "FOV Changer", Default = false, Callback = function(v) ExtraToggles.FOVChanger = v; updateFOV() end })
+VisualsGroup:AddSlider("FOVValue", { Text = "FOV Value", Default = 70, Min = 20, Max = 120, Rounding = 1, Callback = function(v) FOVValue = v; if ExtraToggles.FOVChanger then updateFOV() end end })
+VisualsGroup:AddToggle("CustomCrosshair", { Text = "Custom Crosshair", Default = false, Callback = function(v) ExtraToggles.CustomCrosshair = v; updateCrosshair() end })
+
+local VisualPlusGroup = Tabs.Visuals:AddRightGroupbox("Combat Visuals")
+VisualPlusGroup:AddToggle("BulletTracers", { Text = "Bullet Tracers (On Click)", Default = false, Callback = function(v) ExtraToggles.BulletTracers = v end })
+VisualPlusGroup:AddToggle("OffScreenIndicators", { Text = "Off-Screen Indicators", Default = false, Callback = function(v) ExtraToggles.OffScreenIndicators = v end })
+VisualPlusGroup:AddSlider("IndicatorRadius", { Text = "Indicator Radius", Default = 150, Min = 50, Max = 500, Rounding = 1, Callback = function(v) ExtraToggles.IndicatorRadius = v end })
+
+local ChamsGroup = Tabs.Visuals:AddRightGroupbox("Chams & Hud")
+ChamsGroup:AddToggle("ChamsEnabled", { Text = "Native Chams (Highlights)", Default = false, Callback = function(v) ExtraToggles.ChamsEnabled = v end })
+ChamsGroup:AddSlider("ChamsFillTransparency", { Text = "Fill Transparency", Default = 0, Min = 0, Max = 1, Rounding = 2, Callback = function(v) ExtraToggles.ChamsFillTransparency = v end })
+ChamsGroup:AddToggle("TargetHudEnabled", { Text = "Target Hud", Default = false, Callback = function(v) ExtraToggles.TargetHudEnabled = v; updateTargetHud() end })
+
+-- 世界調整與天空盒自定義
+local WorldGroup = Tabs.Visuals:AddRightGroupbox("World Settings")
+WorldGroup:AddToggle("WorldColorEnabled", { Text = "Enable World Color", Default = false, Callback = function(v) ExtraToggles.WorldColorEnabled = v; updateWorldColor() end })
+WorldGroup:AddLabel('World Tint'):AddColorPicker('WorldColorPicker', { Default = Color3.fromRGB(255, 255, 255), Title = 'World Color', Callback = function(v) ExtraToggles.WorldColor = v; updateWorldColor() end })
+WorldGroup:AddToggle("CustomSkyEnabled", { Text = "Enable Custom Sky", Default = false, Callback = function(v) ExtraToggles.CustomSkyEnabled = v; updateSky() end })
+WorldGroup:AddInput('CustomSkyID', { Default = '1417494402', Numeric = false, Finished = false, Text = 'Skybox Image ID', Placeholder = 'Enter Decal/Image ID', Callback = function(v) ExtraToggles.CustomSkyID = v; updateSky() end })
+WorldGroup:AddToggle("TimeChanger", { Text = "Change Time", Default = false, Callback = function(v) ExtraToggles.TimeChanger = v; updateTime() end })
+WorldGroup:AddSlider("TimeValue", { Text = "Time (0-24)", Default = 12, Min = 0, Max = 24, Rounding = 1, Callback = function(v) ExtraToggles.TimeValue = v; if ExtraToggles.TimeChanger then updateTime() end end })
+WorldGroup:AddToggle("GravityChanger", { Text = "Change Gravity", Default = false, Callback = function(v) ExtraToggles.GravityChanger = v; updateGravity() end })
+WorldGroup:AddSlider("GravityValue", { Text = "Gravity", Default = 196, Min = 0, Max = 500, Rounding = 1, Callback = function(v) ExtraToggles.GravityValue = v; if ExtraToggles.GravityChanger then updateGravity() end end })
+WorldGroup:AddToggle("RemoveClouds", { Text = "Remove Clouds", Default = false, Callback = function(v) ExtraToggles.RemoveClouds = v; updateRemoveClouds() end })
+WorldGroup:AddToggle("NoPlants", { Text = "No Plants", Default = false, Callback = function(v) ExtraToggles.NoPlants = v; updateNoPlants() end })
+
+-- 4. Misc 標籤頁
+local MiscGroup = Tabs.Misc:AddLeftGroupbox("Utility")
+MiscGroup:AddToggle("AutoReconnect", { Text = "Auto Reconnect", Default = false, Callback = function(v) ExtraToggles.AutoReconnect = v; updateAutoReconnect() end })
+MiscGroup:AddToggle("AntiAFK", { Text = "Anti-AFK", Default = false, Callback = function(v) ExtraToggles.AntiAFK = v; updateAntiAFK() end })
+MiscGroup:AddButton({ Text = "Quick Respawn", Func = quickRespawn })
+MiscGroup:AddToggle("InfiniteTools", { Text = "Infinite Tools", Default = false, Callback = function(v) ExtraToggles.InfiniteTools = v; updateInfiniteTools() end })
+MiscGroup:AddButton({ Text = "Server Hop", Func = serverHop })
+MiscGroup:AddToggle("ChatSpam", { Text = "Chat Spam", Default = false, Callback = function(v) ExtraToggles.ChatSpam = v; chatSpam() end })
+MiscGroup:AddInput("SpamMessage", { Text = "Spam Message", Default = "KEVIN SCRIPT RULES!", Callback = function(v) ExtraToggles.SpamMessage = v end })
+MiscGroup:AddButton({ Text = "Teleport to Mouse", Func = teleportToMouse })
+MiscGroup:AddButton({ Text = "Kill All", Func = killAll })
+MiscGroup:AddToggle("TeleportAboveEnemy", { Text = "Teleport Above Enemy", Default = false, Callback = function(v) ExtraToggles.TeleportAboveEnemy = v; updateTeleportAboveEnemy() end })
+MiscGroup:AddSlider("TeleportHeight", { Text = "Teleport Height", Default = 12, Min = 6, Max = 25, Rounding = 1, Callback = function(v) ExtraToggles.TeleportAboveHeight = v end })
+
+local VoidGroup = Tabs.Misc:AddRightGroupbox("CSync Void (Desync)")
+VoidGroup:AddToggle("EnableVoid", { 
+    Text = "Enable CSync Void", 
+    Default = false, 
+    Callback = function(v)
+        VoidFramework.settings.enable_void = v
+        if v then startVoid() else stopVoid() end
+    end 
+}):AddKeyPicker("VoidKeybind", { Default = "H", Text = "Toggle Void", SyncToggleState = true })
+
+VoidGroup:AddSlider("VoidSwitchSpeed", { Text = "Switch Speed", Default = 0.05, Min = 0.0001, Max = 10, Rounding = 4, Callback = function(v) VoidFramework.settings.switchSpeed = v end })
+VoidGroup:AddSlider("VoidDepth", { Text = "Depth Multiplier", Default = 1, Min = 1, Max = 2000000, Rounding = 0, Callback = function(v) VoidFramework.settings.depthMultiplier = v end })
+VoidGroup:AddSlider("VoidRandX", { Text = "Random Vel X", Default = 0, Min = 0, Max = 1000000, Rounding = 0, Callback = function(v) VoidFramework.settings.rand_vel_x = v end })
+VoidGroup:AddSlider("VoidRandY", { Text = "Random Vel Y", Default = 0, Min = 0, Max = 1000000, Rounding = 0, Callback = function(v) VoidFramework.settings.rand_vel_y = v end })
+VoidGroup:AddSlider("VoidRandZ", { Text = "Random Vel Z", Default = 0, Min = 0, Max = 1000000, Rounding = 0, Callback = function(v) VoidFramework.settings.rand_vel_z = v end })
+VoidGroup:AddSlider("VoidJerk", { Text = "Jerk Intensity", Default = 20, Min = 0, Max = 100, Rounding = 0, Callback = function(v) VoidFramework.settings.jerk_intensity = v end })
+VoidGroup:AddSlider("VoidRandIntensity", { Text = "Rand Vel Intensity", Default = 15, Min = 0, Max = 100, Rounding = 0, Callback = function(v) VoidFramework.settings.random_vel_intensity = v end })
+VoidGroup:AddButton({ Text = "Emergency Return", Func = function() safeReturn() end })
+
+-- 5. Settings 標籤頁
+local MenuGroup = Tabs.Settings:AddLeftGroupbox("Menu")
+MenuGroup:AddToggle("MenuKeybindVisible", { Text = "Open Keybind Menu", Default = false, Callback = function(v) Library.KeybindFrame.Visible = v end })
+MenuGroup:AddToggle("ShowCustomCursor", { Text = "Custom Cursor", Default = true, Callback = function(v) Library.ShowCustomCursor = v end })
+MenuGroup:AddDropdown("NotificationSide", { Values = { "Left", "Right" }, Default = "Right", Text = "Notification Side", Callback = function(v) Library:SetNotifySide(v) end })
+MenuGroup:AddDropdown("DPIDropdown", { Values = { "50%", "75%", "100%", "125%", "150%", "175%", "200%" }, Default = "100%", Text = "DPI Scale", Callback = function(v)
+	local DPI = tonumber(v:gsub("%%", ""))
+	Library:SetDPIScale(DPI)
+end })
+MenuGroup:AddDivider()
+MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
+MenuGroup:AddButton("Unload", function() Library:Unload() end)
+
+Library.ToggleKeybind = Options.MenuKeybind
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
+ThemeManager:SetFolder("kevin_script")
+SaveManager:SetFolder("kevin_script/configs")
+SaveManager:BuildConfigSection(Tabs.Settings)
+ThemeManager:ApplyToTab(Tabs.Settings)
+SaveManager:LoadAutoloadConfig()
+
+-- ========== 主循環 ==========
+local heartbeatConn = RunService.Heartbeat:Connect(function(dt)
+	updateFly()
+	updateInfiniteJump()
+	updateNoclip()
+	updateBHop()
+	updateSpiderClimb()
+	updateJetpack()
+	updateOrbit()
+	updateGodMode()
+	updateNoRecoil()
+	updateRapidFire()
+	updateInfiniteAmmo()
+	updateAutoShoot()
+	updateInfiniteTools()
+	chatSpam()
+	updateAutoReconnect()
+	updateAntiAFK()
+	updateAntiAim()
+	updateJumpPower()
+	updateTeleportAboveEnemy()
+    updateVoid(dt)
+    updateSimulation(dt)
+end)
+
+local renderConn = RunService.RenderStepped:Connect(function()
+	updateESP()
+	updateSkeletonESP()
+	updateRadar()
+	updateTargetMarker()
+	updateThirdPerson()
+	updateCrosshair()
+	updateFOV()
+	updateFullbright()
+	updateNoFog()
+	updateTime()
+	updateGravity()
+	updateRemoveClouds()
+	updateNoPlants()
+	updateAntiAim()
+	updateSpeed()
+	
+	updateNativeChams()
+	updateOffScreenIndicators()
+	updateTargetHud()
+	
+	-- ========== Aimbot 與 FOV 邏輯整合更新 ==========
+	if FOVCircle then
+		FOVCircle.Visible = ExtraToggles.AimbotEnabled and getgenv().ShowFOVCircle
+		
+		FOVCircle.Color = ExtraToggles.FOVColor
+		FOVCircle.Filled = ExtraToggles.FOVFilled
+		FOVCircle.Transparency = ExtraToggles.FOVTransparency
+		
+		if ExtraToggles.AimbotDynamicFOV then
+			local fovScale = 70 / Camera.FieldOfView
+			FOVCircle.Radius = ExtraToggles.AimbotFOV * fovScale
+		else
+			FOVCircle.Radius = ExtraToggles.AimbotFOV
+		end
+		
+		if UserInputService.TouchEnabled then
+			FOVCircle.Position = Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)
+		else
+			FOVCircle.Position = UserInputService:GetMouseLocation()
+		end
+	end
+
+	-- ========== Silent Aim FOV 邏輯更新 ==========
+	if SilentAimFOVCircle then
+		-- [修正] 只要開啟顯示選項就能獨立顯示，方便調整參數
+		SilentAimFOVCircle.Visible = ExtraToggles.ShowSilentAimFOV
+		SilentAimFOVCircle.Radius = ExtraToggles.SilentAimFOV
+		
+		-- [新增] 套用 Silent Aim FOV 的自定義顏色、填滿狀態與透明度
+		SilentAimFOVCircle.Color = ExtraToggles.SilentAimFOVColor
+		SilentAimFOVCircle.Filled = ExtraToggles.SilentAimFOVFilled
+		SilentAimFOVCircle.Transparency = ExtraToggles.SilentAimFOVTransparency
+		
+		if UserInputService.TouchEnabled then
+			SilentAimFOVCircle.Position = Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)
+		else
+			SilentAimFOVCircle.Position = UserInputService:GetMouseLocation()
+		end
+	end
+
+	if ExtraToggles.AimbotEnabled then
+		local shouldAim = false
+		if UserInputService.TouchEnabled then
+			shouldAim = MobileAiming
+		else
+			if ExtraToggles.AimbotHoldMode then
+				shouldAim = IsAimKeyDown
+			else
+				shouldAim = AimbotToggled
+			end
+		end
+
+		if shouldAim then
+			local hitChanceValid = true
+			if ExtraToggles.AimbotHitChance < 100 then
+				hitChanceValid = math.random(1, 100) <= ExtraToggles.AimbotHitChance
+			end
+			
+			if hitChanceValid then
+				local target = getAimbotTarget()
+				if target and target.Character then
+					local partName = ExtraToggles.AimbotPart and "Head" or "HumanoidRootPart"
+					local targetPart = target.Character:FindFirstChild(partName)
+					if targetPart then
+						local targetPos = targetPart.Position
+						if ExtraToggles.AimbotPrediction and targetPart.Velocity then
+							targetPos = targetPos + (targetPart.Velocity * ExtraToggles.AimbotPredictionStrength)
+						end
+						
+						local cam = workspace.CurrentCamera
+						local newCFrame = CFrame.new(cam.CFrame.Position, targetPos)
+						
+						if ExtraToggles.AimbotSmoothnessValue > 0 and ExtraToggles.AimbotSmoothnessValue < 1 then
+							local lerpFactor = 1 - ExtraToggles.AimbotSmoothnessValue
+							cam.CFrame = cam.CFrame:Lerp(newCFrame, lerpFactor) 
+						else
+							cam.CFrame = newCFrame
+						end
+					end
+				end
+			end
+		end
+	end
+end)
